@@ -7,25 +7,28 @@ import Hero from './components/Hero.js';
 import AsideMenu from './components/AsideMenu.js';
 import Footer from './components/Footer.js';
 import Offline from './components/Offline.js';
+import Splash from './pages/Splash.js';
 
 function App() {
   const [items, setItems] = React.useState([]);
   const [offlineStatus, setOfflineStatus] = React.useState(!navigator.onLine);
+  const [isLoading, setIsLoading] = React.useState(true);
 
-  function handleOfflineStatus(){
+  function handleOfflineStatus() {
     setOfflineStatus(!navigator.onLine);
   }
 
-  React.useEffect(function(){
-    (async function(){
-      const response = await fetch('https://prod-qore-app.qorebase.io/8ySrll0jkMkSJVk/allItems/rows?limit=7&offset=0&$order=asc',{
-        headers:{
-          "Content-Type":"application/json",
-          "accept":"application/json",
-          "x-api-key":process.env.REACT_APP_APIKEY}
+  React.useEffect(function () {
+    (async function () {
+      const response = await fetch('https://prod-qore-app.qorebase.io/8ySrll0jkMkSJVk/allItems/rows?limit=7&offset=0&$order=asc', {
+        headers: {
+          "Content-Type": "application/json",
+          "accept": "application/json",
+          "x-api-key": process.env.REACT_APP_APIKEY
+        }
       });
-      const {nodes} = await response.json();
-      setItems (nodes);
+      const { nodes } = await response.json();
+      setItems(nodes);
 
       const script = document.createElement("script"); //membuat element untuk loding carousel
       script.src = "/carousel.js";
@@ -34,25 +37,34 @@ function App() {
     })();
 
     handleOfflineStatus();
-    window.addEventListener('online',handleOfflineStatus);
-    window.addEventListener('offline',handleOfflineStatus);
+    window.addEventListener('online', handleOfflineStatus);
+    window.addEventListener('offline', handleOfflineStatus);
 
-    return function(){
-      window.removeEventListener('online',handleOfflineStatus);
-      window.removeEventListener('offline',handleOfflineStatus);
+    setTimeout(function () {
+      setIsLoading(false)
+    }, 1500)
+
+    return function () {
+      window.removeEventListener('online', handleOfflineStatus);
+      window.removeEventListener('offline', handleOfflineStatus);
     }
 
-  },[offlineStatus])
+  }, [offlineStatus])
   return (
     <>
-    {offlineStatus && <Offline />}
-    <Header/>
-    <Hero/>
-    <Browse/>
-    <Arrived items={items}/>
-    <Clients/>
-    <AsideMenu/>
-    <Footer/>
+      {isLoading === true ? <Splash /> : (
+        <>
+          {offlineStatus && <Offline />}
+          <Header />
+          <Hero />
+          <Browse />
+          <Arrived items={items} />
+          <Clients />
+          <AsideMenu />
+          <Footer />
+        </>
+      )
+      }
     </>
 
   );
