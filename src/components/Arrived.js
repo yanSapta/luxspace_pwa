@@ -10,7 +10,7 @@ function Arrived(){
       </div>
       <div className="overflow-x-hidden px-4" id="carousel">
         <div className="container mx-auto"></div>
-        <div className="overflow-hidden z-10"> 
+        {/* <div className="overflow-hidden z-10">  */}
         <div className="flex -mx-4 flex-row relative">
           {/* <!-- START: JUST ARRIVED ROW 1 --> */}
           <div className="px-4 relative card group">
@@ -314,7 +314,7 @@ function Arrived(){
           {/* <!-- END: JUST ARRIVED ROW 1 --> */}
         </div>
         </div> 
-      </div>
+      {/* </div> */}
     </section>
     )
 }
